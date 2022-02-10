@@ -2,7 +2,7 @@ node('Dev')
 {
     stage('continuousdownload_ master') 
     {
-       git 'https://github.com/fres0221/Maven_fareed.git'
+       git 'https://github.com/fres0221/Maven_321.git'
     }
     stage('continuousbuild_ master') 
     {
