@@ -1,0 +1,26 @@
+node('Dev') 
+{
+    stage('continuousdownload') 
+    {
+       git 'https://github.com/fres0221/maven-212.git'
+    }
+    stage('continuousbuild') 
+    {
+       sh 'mvn package'
+    }
+    stage('continuousdeployment') 
+    {
+       sh 'scp /home/ubuntu/.jenkins/workspace/scripted_214/webapp/target/webapp.war ubuntu@172.31.80.110:/var/lib/tomcat8/webapps/testing.war'
+    }
+    stage('continuoustesting') 
+    {
+       git 'https://github.com/fres0221/functionaltesting_212.git'
+       sh 'java -jar /home/ubuntu/.jenkins/workspace/scripted_214/testing.jar'
+    }
+    stage('continuousdelivery') 
+    {
+       sh 'scp /home/ubuntu/.jenkins/workspace/scripted_214/webapp/target/webapp.war ubuntu@172.31.85.10:/var/lib/tomcat8/webapps/testing.war'
+    }
+   
+    
+}

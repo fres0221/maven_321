@@ -1,0 +1,103 @@
+pipeline
+{
+    agent any
+    stages
+    {
+         stage('ContinuousDownloading')
+         {
+           steps
+           {
+               script
+               {
+                   try
+                   {
+                    git 'https://github.com/fres0221/maven-212.git'
+               
+                   }
+                   catch(Exception e1)
+                   {
+                       mail bcc: '', body: 'ci-cd fail', cc: 'madhusai130898@gmail.com', from: '', replyTo: '', subject: 'ci-cd fail due to job', to: 'shaikfareedl221@gmail.com'
+                       
+                   }
+                }
+           }
+       }
+       stage('ContinuousBuild')
+         {
+           steps
+           {
+               script
+               {
+                   try
+                   {
+                     sh 'mvn package'
+                   }
+                   catch(Exception e2)
+                   {
+                       mail bcc: '', body: 'ci-cd fail', cc: 'madhusai130898@gmail.com', from: '', replyTo: '', subject: 'ci-cd fail due to job', to: 'shaikfareedl221@gmail.com'
+                       
+                   }
+                }
+           }
+       }
+        stage('ContinuousDeployment')
+         {
+           steps
+           {
+               script
+               {
+                   try
+                   {
+                       sh 'scp /home/ubuntu/.jenkins/workspace/declerativepipeline-exce/webapp/target/webapp.war ubuntu@172.31.80.110:/var/lib/tomcat8/webapps/testing.war'
+                   }
+                   catch(Exception e3)
+                   {
+                       mail bcc: '', body: 'ci-cd fail', cc: 'madhusai130898@gmail.com', from: '', replyTo: '', subject: 'ci-cd fail due to job', to: 'shaikfareedl221@gmail.com'
+                       
+                   }
+                }
+           }
+       }
+       stage('ContinuousTesting')
+         {
+           steps
+           {
+               script
+               {
+                   try
+                   {
+                       git 'https://github.com/fres0221/functionaltesting_212.git'
+                       sh 'java -jar /home/ubuntu/.jenkins/workspace/declarativepipeline/testing.jar'
+                   }
+                   catch(Exception e4)
+                   {
+                       mail bcc: '', body: 'ci-cd fail', cc: 'madhusai130898@gmail.com', from: '', replyTo: '', subject: 'ci-cd fail due to job', to: 'shaikfareedl221@gmail.com'
+                       
+                   }
+                }
+           }
+       }
+        stage('ContinuousDelivery')
+         {
+           steps
+           {
+               script
+               {
+                   try
+                   {
+                       sh 'scp /home/ubuntu/.jenkins/workspace/declarativepipeline/webapp/target/webapp.war ubuntu@172.31.85.10:/var/lib/tomcat8/webapps/prod.war'
+                   }
+                   catch(Exception e4)
+                   {
+                       mail bcc: '', body: 'ci-cd fail', cc: 'madhusai130898@gmail.com', from: '', replyTo: '', subject: 'ci-cd fail due to job', to: 'shaikfareedl221@gmail.com'
+                       
+                   }
+                }
+           }
+       }
+    }
+    
+    
+}
+
+
