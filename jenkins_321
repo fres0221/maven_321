@@ -1,25 +1,53 @@
-node('Dev') 
+pipeline
 {
-    stage('continuousdownload_ master') 
-    {
-       git 'https://github.com/fres0221/Maven_fareed.git'
-    }
-    stage('continuousbuild_ master') 
-    {
-       sh 'mvn package'
-    }
-    stage('continuousdeployment_ master') 
-    {
-       sh 'scp /home/ubuntu/.jenkins/workspace/Multipipeline-2_master/webapp/target/webapp.war ubuntu@172.31.80.110:/var/lib/tomcat8/webapps/testing.war'
-    }
-    stage('continuoustesting_ master') 
-    {
-       git 'https://github.com/fres0221/functionaltesting_212.git'
-       sh 'java -jar /home/ubuntu/.jenkins/workspace/Multipipeline-2_master/testing.jar'
-    }
-    stage('continuousdelivery_ master') 
-    {
-       sh 'scp /home/ubuntu/.jenkins/workspace/Multipipeline-2_master/webapp/target/webapp.war ubuntu@172.31.85.10:/var/lib/tomcat8/webapps/prod.war'
-    }
+   agent any
+   stages
+   {
+       stage('ContinuousDownloading_ perbkg')
+       {
+           steps
+           {
+               git 'https://github.com/fres0221/maven_321.git'
+           }
+           
+       }
+       stage('ContinuousBuild_ perbkg')
+       {
+           steps
+           {
+               sh 'mvn package'           
+               
+           }
+           
+       }
+       stage('ContinuousDeployment_ perbkg')
+       {
+           steps
+           {
+                sh 'scp /home/ubuntu/.jenkins/workspace/multipipeline_214_perbkg/webapp/target/webapp.war ubuntu@172.31.80.110:/var/lib/tomcat8/webapps/testing.war'
+               
+           }
+           
+       }
+       stage('ContinuousTesting_ perbkg')
+       {
+           steps
+           {
+                git 'https://github.com/fres0221/functionaltesting_212.git'
+                sh 'java -jar /home/ubuntu/.jenkins/workspace/multipipeline_214_perbkg/testing.jar'
+           }
+           
+       }
+        stage('ContinuousDelivery_ perbkg')
+       {
+           steps
+           {
+                sh 'scp /home/ubuntu/.jenkins/workspace/multipipeline_214_perbkg/webapp/target/webapp.war ubuntu@172.31.85.10:/var/lib/tomcat8/webapps/prod.war'
+           }
+           
+       }
+       
+   }
     
 }
+   
